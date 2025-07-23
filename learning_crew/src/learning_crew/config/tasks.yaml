@@ -1,0 +1,106 @@
+# # src/research_crew/config/tasks.yaml
+# research_task:
+#   description: >
+#     Conduct thorough research on {topic}. Focus on:
+#     1. Key concepts and definitions
+#     2. Historical development and recent trends
+#     3. Major challenges and opportunities
+#     4. Notable applications or case studies
+#     5. Future outlook and potential developments
+
+#     Make sure to organize your findings in a structured format with clear sections.
+#   expected_output: >
+#     A comprehensive research document with well-organized sections covering
+#     all the requested aspects of {topic}. Include specific facts, figures,
+#     and examples where relevant.
+#   agent: researcher
+
+# analysis_task:
+#   description: >
+#     Analyze the research findings and create a comprehensive report on {topic}.
+#     Your report should:
+#     1. Begin with an executive summary
+#     2. Include all key information from the research
+#     3. Provide insightful analysis of trends and patterns
+#     4. Offer recommendations or future considerations
+#     5. Be formatted in a professional, easy-to-read style with clear headings
+#   expected_output: >
+#     A polished, professional report on {topic} that presents the research
+#     findings with added analysis and insights. The report should be well-structured
+#     with an executive summary, main sections, and conclusion.
+#   agent: analyst
+#   context:
+#     - research_task
+#   output_file: output/report.md
+
+
+identify_skill_gaps:
+  description: >
+    Analyze the learner's goal "{learning_goal}" and their current level to identify 
+    specific skills and knowledge areas that need to be developed. Consider their 
+    application context "{application_context}" to prioritize relevant skills.
+    
+    Current level: {current_level}
+    Target level: {target_level}
+    
+    Provide a structured breakdown of:
+    1. Required skills for the goal
+    2. Skills the learner likely already has
+    3. Priority skill gaps to address
+    4. Estimated learning effort for each gap
+  expected_output: >
+    A detailed skill gap analysis with prioritized learning objectives
+  agent: skill_identifier
+
+create_learner_profile:
+  description: >
+    Based on the user inputs and skill gap analysis, create a comprehensive learner 
+    profile that will guide content personalization:
+    
+    Learning goal: {learning_goal}
+    Current level: {current_level}
+    Target level: {target_level}
+    Application context: {application_context}
+    
+    Include learning preferences, estimated pace, and content format recommendations.
+  expected_output: >
+    A structured learner profile with personalization recommendations
+  agent: learner_profiler
+  context:
+    - identify_skill_gaps
+
+design_learning_path:
+  description: >
+    Create an optimal learning sequence that addresses the identified skill gaps. 
+    The path should be designed for efficiency and engagement, with each step 
+    building logically on the previous one.
+    
+    Focus on creating a path that:
+    - Minimizes cognitive overload
+    - Provides quick wins early on
+    - Builds practical skills progressively
+    - Accounts for the application context
+  expected_output: >
+    A detailed learning path with modules, estimated timeframes, and learning objectives
+  agent: path_scheduler
+  context:
+    - identify_skill_gaps
+    - create_learner_profile
+
+generate_learning_content:
+  description: >
+    Create concise, focused learning materials for the first 2-3 modules of the learning path. 
+    Content should be:
+    - Brief but comprehensive
+    - Practically oriented
+    - Easy to digest quickly
+    - Include actionable exercises or examples
+    
+    Focus on brevity to enable fast learning while maintaining quality and completeness.
+  expected_output: >
+    Concise learning materials for the initial modules, formatted for easy consumption
+  agent: content_creator
+  context:
+    - identify_skill_gaps
+    - create_learner_profile
+    - design_learning_path
